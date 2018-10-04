@@ -103,12 +103,14 @@
                     serverPaging: true,
                     serverFiltering: true,
                     serverSorting: true,
+                    sort: { field: "firstName", dir: "desc" }
                 },
                 pageable: {
                     refresh: true,
                     pageSizes: true,
                     buttonCount: 5
                 },
+                sortable: true,
                 columns: [{
                     field: "Name",
                     title: "Name"

@@ -7,11 +7,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ru.sgorshkov.webapp.model.ResponseObject;
-import ru.sgorshkov.webapp.model.UserModel;
 import ru.sgorshkov.webapp.service.UserService;
+
+import java.util.Map;
 
 @Controller
 public class UserController {
+
+    private static final String DEFAULT_PAGE_SIZE = "10";
+    private static final String DEFAULT_PAGE = "0";
+    private static final String DEFAULT_SORT_FIELD = "first_name";
+    private static final String DEFAULT_SORT_DIR = "desc";
 
     @Autowired
     UserService userService;
@@ -23,9 +29,15 @@ public class UserController {
 
     @GetMapping("user/list")
     @ResponseBody
-    public ResponseObject findAllUserByParam(@RequestParam int page,
-                                             @RequestParam int pageSize){
-        return userService.findAll(page, pageSize);
+    public ResponseObject findAllUserByParam(@RequestParam Map<String, String> request){
+
+        int page = Integer.parseInt(request.getOrDefault("page", DEFAULT_PAGE));
+        int pageSize = Integer.parseInt(request.getOrDefault("pageSize", DEFAULT_PAGE_SIZE));
+        String sortField = request.getOrDefault("sort[0][field]", DEFAULT_SORT_FIELD);
+        String sortDir = request.getOrDefault("sort[0][dir]", DEFAULT_SORT_DIR);
+        if(sortField.equals("name")){ sortField = "lastName";}
+
+        return userService.findAll(page, pageSize, sortField, sortDir);
     }
 
 }
